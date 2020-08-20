@@ -245,16 +245,9 @@ SAVE FOR POTENTIAL FUTURE TESTING
 # %%
 def make_master_file(filepaths_to_docs, filepaths_to_summs):
 
-    ## THIS NEEDS TO TAKE TWO LISTS FROM API
     '''
-    needs to take in the dictionary, parse out the variables, and change the calls
-    to the functions to include those variables
-
-    it uses the above functions to:
-    
-        - create the summaries for the text in each individual article
-        - formats headings and makes a table of contents for each file
-
+    takes in doc filepaths and summ filepaths (which will be the inputs from the API function)
+    returns the master file by calling the already defined functions
     '''
     df = make_doc_dataframe(filepaths_to_docs, filepaths_to_summs)
 
