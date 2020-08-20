@@ -108,8 +108,6 @@ TO DO - MORNING OF AUGUST 20
 
     Abstract/article : segoe ui semibold font size 11
 
-- make sure in landscape mode (sideways)
-
 '''
 # %%
 def make_toc(doc):
@@ -156,42 +154,23 @@ def create_doc(doc, summ_text, section, article_name, new_section = False):
     try:
         doc.styles.add_style('Heading 1', WD_STYLE_TYPE.PARAGRAPH)
         doc.styles.add_style('Heading 2', WD_STYLE_TYPE.PARAGRAPH)
-        # section_style = doc.sections[-1]
-        # section_style.orientation = WD_ORIENT.LANDSCAPE
     except:
         print('style already added')
         pass
 
     paragraphs = doc.paragraphs
 
-    # sections = doc.sections
-    # for docsection in sections:
-    #     # change orientation to landscape
-    #     docsection.orientation = WD_ORIENT.LANDSCAPE
-
-    #     new_width, new_height = docsection.page_height, docsection.page_width
-    #     docsection.page_width = new_width
-    #     docsection.page_height = new_height
+    p = paragraphs[0]
 
     if new_section == True:
-
-        p = paragraphs[0]
         section_paragraph = p.insert_paragraph_before(section)
         section_paragraph.style = doc.styles['Heading 1']
-        title = p.insert_paragraph_before(article_name)
-        title.style = doc.styles['Heading 2']
-        abstract_title = p.insert_paragraph_before('Abstract:')
-        abstract = p.insert_paragraph_before(summ_text)
-        article_title = p.insert_paragraph_before('Article:')
 
-    else:
-
-        p = paragraphs[0]
-        title = p.insert_paragraph_before(article_name)
-        title.style = doc.styles['Heading 2']
-        abstract_title = p.insert_paragraph_before('Abstract:')
-        abstract = p.insert_paragraph_before(summ_text)
-        article_title = p.insert_paragraph_before('Article:')
+    title = p.insert_paragraph_before(article_name)
+    title.style = doc.styles['Heading 2']
+    abstract_title = p.insert_paragraph_before('Abstract:')
+    abstract = p.insert_paragraph_before(summ_text)
+    article_title = p.insert_paragraph_before('Article:')
 
     return doc
 
@@ -206,9 +185,6 @@ def make_master_file(filepaths_to_docs, filepaths_to_summs):
     df = make_doc_dataframe(filepaths_to_docs, filepaths_to_summs)
 
     toc = Document()
-
-    # section = toc.sections[-1] # orient toc in landscape, hopefully this makes everything this way
-    # section.orientation = WD_ORIENT.LANDSCAPE
 
     paragraph = toc.add_paragraph('TABLE OF CONTENTS')
     toc = make_toc(toc)
@@ -237,9 +213,6 @@ def make_master_file(filepaths_to_docs, filepaths_to_summs):
 
     final_doc = Document('master_doc.docx')
 
-    # section = final_doc.sections[-1] 
-    # section.orientation = WD_ORIENT.LANDSCAPE
-
     sections = final_doc.sections
     for docsection in sections:
         # change orientation to landscape
@@ -250,8 +223,6 @@ def make_master_file(filepaths_to_docs, filepaths_to_summs):
         docsection.page_height = new_height
 
     final_doc.save('master_doc.docx')
-
-    # return master_doc 
 
 # %%
 make_master_file(filepaths_to_docs, filepaths_to_summs)
