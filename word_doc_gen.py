@@ -8,6 +8,8 @@ import glob
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 from docx.enum.style import WD_STYLE_TYPE
+from docx.shared import Pt
+
 
 from docxcompose.composer import Composer
 
