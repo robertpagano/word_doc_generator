@@ -212,7 +212,7 @@ def make_master_file(filepaths_to_docs, filepaths_to_summs):
     for document in article_list[1:]:
         composer.append(document)
 
-    composer.save('master_doc.docx') # need to tell Kevin that I'm saving it down as master_doc.docx)
+    composer.save('master_doc.docx') # need to tell Kevin that I'm saving it down as master_doc.docx
 
     # return master_doc 
 
