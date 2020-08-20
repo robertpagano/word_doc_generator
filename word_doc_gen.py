@@ -22,10 +22,9 @@ functions extract all needed data from filepaths_to_docs list and filepaths_to_s
 use this data to create a dataframe, and then build the master document 
 '''
 
-
-# this is how we will receive the data from the Flow API request
-filepaths_to_docs = glob.glob('articles/**/*.docx')
-filepaths_to_summs = glob.glob('articles/**/*.txt')
+# # this is how we will receive the data from the Flow API request
+# filepaths_to_docs = glob.glob('articles/**/*.docx')
+# filepaths_to_summs = glob.glob('articles/**/*.txt')
 
 # %%
 
