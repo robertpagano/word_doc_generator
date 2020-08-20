@@ -90,24 +90,6 @@ def make_doc_dataframe(filepaths_to_docs, filepaths_to_summs):
 
     return df
 
-df = make_doc_dataframe(filepaths_to_docs, filepaths_to_summs)
-
-'''
-TO DO - MORNING OF AUGUST 20
-
-  - make a document for each heading that lives in the repo, can pull from these using composer to add to the newsletter
-
-- use font information that maria sent
-
-  - All titles: Segoe UI Semibold font size 12 (black) 
-
-    body/paragraphs - segoe ui font size 11 (black)   	
-
-    unfilled bullets (like the photo - black) 
-
-    Abstract/article : segoe ui semibold font size 11
-
-'''
 # %%
 def make_toc(doc):
     '''
@@ -140,6 +122,7 @@ def make_toc(doc):
     r_element.append(fldChar2)
     r_element.append(fldChar4)
     p_element = paragraph._p
+
     return doc
 
 # %%
@@ -171,6 +154,7 @@ def create_doc(doc, summ_text, section, article_name, new_section = False):
     font_2 = new_heading_style_2.font
     font_2.name = 'Segoe UI Semibold'
     font_2.size = Pt(12)
+    font_2.color.rgb = RGBColor(0, 0, 0)
 
     # it's not letting me change 'normal' style and apply that, so making a new style
     new_normal_style = doc.styles.add_style('New Normal', WD_STYLE_TYPE.PARAGRAPH)
@@ -233,7 +217,7 @@ def make_master_file(filepaths_to_docs, filepaths_to_summs):
 
     toc = Document()
 
-    # need to set this for TOC document too
+    # need to set these for TOC document too
     new_normal_style_part = toc.styles.add_style('New Normal Part', WD_STYLE_TYPE.PARAGRAPH)
     new_normal_style_part.base_style = toc.styles['Normal']
     normal_part_font = new_normal_style_part.font
@@ -242,6 +226,18 @@ def make_master_file(filepaths_to_docs, filepaths_to_summs):
 
     paragraph = toc.add_paragraph('TABLE OF CONTENTS', style = 'New Normal Part')
     toc = make_toc(toc)
+
+    new_normal_style = toc.styles.add_style('New Normal', WD_STYLE_TYPE.PARAGRAPH)
+    new_normal_style.base_style = toc.styles['Normal']
+    normal_font = new_normal_style.font
+    normal_font.name = 'Segoe UI'
+    normal_font.size = Pt(11)
+
+    # trying to change font of TOC
+    paragraphs = toc.paragraphs
+    for paragraph in paragraphs:
+        paragraph.style = toc.styles['New Normal']
+
     article_list = [toc]
 
     for index, row in df.iterrows():
@@ -277,8 +273,3 @@ def make_master_file(filepaths_to_docs, filepaths_to_summs):
         docsection.page_height = new_height
 
     final_doc.save('master_doc.docx')
-
-# %%
-make_master_file(filepaths_to_docs, filepaths_to_summs)
-
-# %%
