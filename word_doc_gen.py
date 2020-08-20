@@ -10,7 +10,6 @@ from docx.oxml import OxmlElement
 from docx.enum.style import WD_STYLE_TYPE
 from docx.shared import Pt
 
-
 from docxcompose.composer import Composer
 
 from pathlib import Path
