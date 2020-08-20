@@ -152,30 +152,9 @@ def create_doc(doc, summ_text, section, article_name, new_section = False):
     '''
     
     try:
-        doc.styles.add_style('Heading 1', WD_STYLE_TYPE.PARAGRAPH) # THIS WORKS
-    #     # heading_1_style = doc.styles.add_style('Heading 1', WD_STYLE_TYPE.PARAGRAPH)
-    #     # heading_1_font = heading_1_style.font
-    #     # heading_1_font.name = 'Segoe UI Semibold'
-    #     # heading_1_font.size = Pt(12)
-
-        doc.styles.add_style('Heading 2', WD_STYLE_TYPE.PARAGRAPH) # THIS WORKS
-    #     # heading_2_style = doc.styles.add_style('Heading 2', WD_STYLE_TYPE.PARAGRAPH)
-    #     # heading_2_font = heading_1_style.font
-    #     # heading_2_font.name = 'Segoe UI Semibold'
-    #     # heading_2_font.size = Pt(12)
-
-    #     new_heading_style_1 = doc.styles.add_style('New Heading 1', WD_STYLE_TYPE.PARAGRAPH)
-    #     new_heading_style_1.base_style = styles['Heading 1']
-    #     font_1 = new_heading_style_1.font
-    #     font_1.name = 'Segoe UI Semibold'
-    #     font_1.size = Pt(12)
-    #     # self.document.add_paragraph('Header One', style='New Heading')
-
-    #     new_heading_style_2 = doc.styles.add_style('New Heading 2', WD_STYLE_TYPE.PARAGRAPH)
-    #     new_heading_style_2.base_style = styles['Heading 2']
-    #     font_2 = new_heading_style_2.font
-    #     font_2.name = 'Segoe UI Semibold'
-    #     font_2.size = Pt(12)
+        # need to set heading and normal styles first, then can edit them later
+        doc.styles.add_style('Heading 1', WD_STYLE_TYPE.PARAGRAPH)
+        doc.styles.add_style('Heading 2', WD_STYLE_TYPE.PARAGRAPH)
 
     except:
         print('style already added')
@@ -197,16 +176,6 @@ def create_doc(doc, summ_text, section, article_name, new_section = False):
     paragraphs = doc.paragraphs
 
     p = paragraphs[0]
-
-    # heading_1_style = doc.styles['Heading 1']
-    # heading_1_font = heading_1_style.font
-    # heading_1_font.name = 'Segoe UI Semibold'
-    # heading_1_font.size = Pt(12)
-
-    # heading_2_style = doc.styles['Heading 2']
-    # heading_2_font = heading_1_style.font
-    # heading_2_font.name = 'Segoe UI Semibold'
-    # heading_2_font.size = Pt(12)
 
     # normal_style = doc.styles['Normal']
     # normal_font = heading_1_style.font
