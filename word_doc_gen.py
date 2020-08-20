@@ -13,15 +13,13 @@ from docxcompose.composer import Composer
 
 from pathlib import Path
 
-# %%
-# this version extracts all needed data from filepaths list and doc list, directly from Flow API call
+'''
+functions extract all needed data from filepaths_to_docs list and filepaths_to_summs list
+use this data to create a dataframe, and then build the master document 
+'''
 
-# below is the final version of accessing files
-# - it takes in 2 lists:
-#  + filepaths_to_docs
-#  + filepaths_to_summs
-# - it will need to go inside of make_master_file, which is the file that will be used in the api
 
+# this is how we will receive the data from the Flow API request
 filepaths_to_docs = glob.glob('articles/**/*.docx')
 filepaths_to_summs = glob.glob('articles/**/*.txt')
 
@@ -92,6 +90,8 @@ def make_doc_dataframe(filepaths_to_docs, filepaths_to_summs):
 df = make_doc_dataframe(filepaths_to_docs, filepaths_to_summs)
 
 '''
+TO DO - MORNING OF AUGUST 20
+
   - make a document for each heading that lives in the repo, can pull from these using composer to add to the newsletter
 
 - use font information that maria sent
@@ -169,8 +169,6 @@ def create_doc(doc, summ_text, section, article_name, new_section = False):
         abstract = p.insert_paragraph_before(summ_text)
         article_title = p.insert_paragraph_before('Article:')
 
-        # TRY ADD HEADING INSTEAD OF THE STYLE STUFF SINCE BOTH HEADINGS ARE BEING ADDED AS NEW!!!!!!
-
     else:
 
         p = paragraphs[0]
@@ -179,66 +177,8 @@ def create_doc(doc, summ_text, section, article_name, new_section = False):
         abstract_title = p.insert_paragraph_before('Abstract:')
         abstract = p.insert_paragraph_before(summ_text)
         article_title = p.insert_paragraph_before('Article:')
-    
-    # make a conditional where if article_name is in either paragraphs[0] of sumamry or article
-    # delete it
-
-    # if paragraphs[0].text == article_name:
-    #     title = paragraphs[0]
-    #     title.style = doc.styles['Heading 2']
-    #     print(paragraphs[0].style)
-    #     # print('same')
-    # else:
-    #     p = paragraphs[0]
-    #     p.insert_paragraph_before(article_name)
-    #     title = paragraphs[0]
-    #     title.style = doc.styles['Heading 2']
-        # print('not same')        
-        # new_doc = Document()
-        # doc.add_heading(article_name)
-        # doc.add_paragraph(get_summ(doc_path))        
-        # composer = Composer(new_doc)
-        # composer.save(filename) 
-
-    # if make_summary:
-    #     summ_doc = Document()
-    #     summ_doc.add_heading(article_name)
-    #     summ_doc.add_paragraph(get_summ(doc))
-    #     return summ_doc
 
     return doc
-
-
-# %%
-'''
-SAVE FOR POTENTIAL FUTURE TESTING
-'''
-# test_doc = Document('Quick.docx')
-# summ_object = 'fake summary'
-# section = 'Partner Update'
-# article_name = 'Quick'
-
-# # %%
-# new_doc = create_doc(test_doc, summ_object, section, article_name, new_section = True)
-
-# # %%
-# test_doc_2 = Document('Infrastructure update.docx')
-# article_name_2 = 'Infrastructure update'
-
-# new_doc_2 = create_doc(test_doc_2, summ_object, section, article_name_2, new_section = False)
-# # %%
-# new_doc.save('TESTINGTESTING.docx')
-# # %%
-# # %%
-# master = new_doc
-# composer = Composer(master)
-# composer.append(test_doc_2)
-
-# composer.save('testingcomposer.docx') 
-
-# %%
-# so the above doesnt seem to work on a single doc, but the other one didnt either
-# hopefully it works when they all get smashed together, we will see!
 
 # %%
 def make_master_file(filepaths_to_docs, filepaths_to_summs):
@@ -278,5 +218,3 @@ def make_master_file(filepaths_to_docs, filepaths_to_summs):
 
 # %%
 make_master_file(filepaths_to_docs, filepaths_to_summs)
-
-# %%
