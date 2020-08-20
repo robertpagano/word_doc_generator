@@ -14,6 +14,9 @@ from docxcompose.composer import Composer
 
 from pathlib import Path
 
+from docx.enum.section import WD_ORIENT
+
+
 '''
 functions extract all needed data from filepaths_to_docs list and filepaths_to_summs list
 use this data to create a dataframe, and then build the master document 
@@ -153,11 +156,22 @@ def create_doc(doc, summ_text, section, article_name, new_section = False):
     try:
         doc.styles.add_style('Heading 1', WD_STYLE_TYPE.PARAGRAPH)
         doc.styles.add_style('Heading 2', WD_STYLE_TYPE.PARAGRAPH)
+        # section_style = doc.sections[-1]
+        # section_style.orientation = WD_ORIENT.LANDSCAPE
     except:
         print('style already added')
         pass
 
     paragraphs = doc.paragraphs
+
+    # sections = doc.sections
+    # for docsection in sections:
+    #     # change orientation to landscape
+    #     docsection.orientation = WD_ORIENT.LANDSCAPE
+
+    #     new_width, new_height = docsection.page_height, docsection.page_width
+    #     docsection.page_width = new_width
+    #     docsection.page_height = new_height
 
     if new_section == True:
 
@@ -192,6 +206,10 @@ def make_master_file(filepaths_to_docs, filepaths_to_summs):
     df = make_doc_dataframe(filepaths_to_docs, filepaths_to_summs)
 
     toc = Document()
+
+    # section = toc.sections[-1] # orient toc in landscape, hopefully this makes everything this way
+    # section.orientation = WD_ORIENT.LANDSCAPE
+
     paragraph = toc.add_paragraph('TABLE OF CONTENTS')
     toc = make_toc(toc)
     article_list = [toc]
@@ -215,7 +233,27 @@ def make_master_file(filepaths_to_docs, filepaths_to_summs):
 
     composer.save('master_doc.docx') # need to tell Kevin that I'm saving it down as master_doc.docx
 
+    # save this down, then open it with docx, then make it landscape
+
+    final_doc = Document('master_doc.docx')
+
+    # section = final_doc.sections[-1] 
+    # section.orientation = WD_ORIENT.LANDSCAPE
+
+    sections = final_doc.sections
+    for docsection in sections:
+        # change orientation to landscape
+        docsection.orientation = WD_ORIENT.LANDSCAPE
+
+        new_width, new_height = docsection.page_height, docsection.page_width
+        docsection.page_width = new_width
+        docsection.page_height = new_height
+
+    final_doc.save('master_doc.docx')
+
     # return master_doc 
 
 # %%
 make_master_file(filepaths_to_docs, filepaths_to_summs)
+
+# %%
