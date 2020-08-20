@@ -142,15 +142,13 @@ def make_toc(doc):
     return doc
 
 # %%
-def create_doc(doc, summ_object, section, article_name, new_section = False):
+def create_doc(doc, summ_text, section, article_name, new_section = False):
     '''
     if new_section == True, then this will make a heading. This will only get triggered as True when a new section is
     seen in the dataframe
 
     '''
     
-    # need to update to include section headers
-
     try:
         doc.styles.add_style('Heading 1', WD_STYLE_TYPE.PARAGRAPH)
         doc.styles.add_style('Heading 2', WD_STYLE_TYPE.PARAGRAPH)
@@ -168,7 +166,7 @@ def create_doc(doc, summ_object, section, article_name, new_section = False):
         title = p.insert_paragraph_before(article_name)
         title.style = doc.styles['Heading 2']
         abstract_title = p.insert_paragraph_before('Abstract:')
-        abstract = p.insert_paragraph_before(summ_object)
+        abstract = p.insert_paragraph_before(summ_text)
         article_title = p.insert_paragraph_before('Article:')
 
         # TRY ADD HEADING INSTEAD OF THE STYLE STUFF SINCE BOTH HEADINGS ARE BEING ADDED AS NEW!!!!!!
@@ -179,7 +177,7 @@ def create_doc(doc, summ_object, section, article_name, new_section = False):
         title = p.insert_paragraph_before(article_name)
         title.style = doc.styles['Heading 2']
         abstract_title = p.insert_paragraph_before('Abstract:')
-        abstract = p.insert_paragraph_before(summ_object)
+        abstract = p.insert_paragraph_before(summ_text)
         article_title = p.insert_paragraph_before('Article:')
     
     # make a conditional where if article_name is in either paragraphs[0] of sumamry or article
@@ -259,24 +257,26 @@ def make_master_file(filepaths_to_docs, filepaths_to_summs):
 
     for index, row in df.iterrows():
         doc = row['doc_object']
-        summ_object = row['summ_object']
+        summ_text = row['summ_text']
         section = row['section']
         article_name = row['article_name']
         
         if row['new_section'] == True: # this adds the section heading above first article in section
-            article_list.append(create_doc(doc, summ_object, section, article_name, new_section = True))
+            article_list.append(create_doc(doc, summ_text, section, article_name, new_section = True))
 
         else:
-            article_list.append(create_doc(doc, summ_object, section, article_name, new_section = False))
+            article_list.append(create_doc(doc, summ_text, section, article_name, new_section = False))
 
     master = article_list[0]
     composer = Composer(master)
     for document in article_list[1:]:
         composer.append(document)
 
-    composer.save(master_filename)
+    composer.save('master_doc.docx') # need to tell Kevin that I'm saving it down as master_doc.docx)
 
-    return master_doc 
+    # return master_doc 
 
 # %%
-make_master_file(df, 'here_is_my_big_test.docx')
+make_master_file(filepaths_to_docs, filepaths_to_summs)
+
+# %%

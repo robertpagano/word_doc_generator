@@ -11,5 +11,6 @@
 # doc and txt files
 articles/*
 
-# demo file
+# demo files
 docbuilder_demo.docx
+master_doc.docx
