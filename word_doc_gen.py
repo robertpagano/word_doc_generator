@@ -249,31 +249,21 @@ def make_master_file(filepaths_to_docs, filepaths_to_summs):
     takes in doc filepaths and summ filepaths (which will be the inputs from the API function)
     returns the master file by calling the already defined functions
     '''
-    df = make_doc_dataframe(filepaths_to_docs, filepaths_to_summs)
 
+    df = make_doc_dataframe(filepaths_to_docs, filepaths_to_summs)
 
     toc = Document()
     paragraph = toc.add_paragraph('TABLE OF CONTENTS')
     toc = make_toc(toc)
     article_list = [toc]
 
-    # for k, v in doc_dict.items():
-    #     doc = v['doc']
-    #     month = v['month']
-    #     section = v['section']
-    #     article_name = k
-    #     article_list.append(create_doc(doc, month, section, article_name, summ))
-
     for index, row in df.iterrows():
-        # first set all new section to FALSE, then test it and come back to add logic ot change this
         doc = row['doc_object']
         summ_object = row['summ_object']
         section = row['section']
         article_name = row['article_name']
-
-        #check if article is first in new section, which would make us start a new section heading
         
-        if row['new_section'] == True:
+        if row['new_section'] == True: # this adds the section heading above first article in section
             article_list.append(create_doc(doc, summ_object, section, article_name, new_section = True))
 
         else:
@@ -288,72 +278,5 @@ def make_master_file(filepaths_to_docs, filepaths_to_summs):
 
     return master_doc 
 
-
-# %% 
-# def make_master_file(df, master_filename):
-
-#     ## THIS NEEDS TO TAKE TWO LISTS FROM API
-#     '''
-#     needs to take in the dictionary, parse out the variables, and change the calls
-#     to the functions to include those variables
-
-#     it uses the above functions to:
-    
-#         - create the summaries for the text in each individual article
-#         - formats headings and makes a table of contents for each file
-
-#     '''
-#     toc = Document()
-#     paragraph = toc.add_paragraph('TABLE OF CONTENTS')
-#     toc = make_toc(toc)
-#     article_list = [toc]
-
-#     # for k, v in doc_dict.items():
-#     #     doc = v['doc']
-#     #     month = v['month']
-#     #     section = v['section']
-#     #     article_name = k
-#     #     article_list.append(create_doc(doc, month, section, article_name, summ))
-
-#     for index, row in df.iterrows():
-#         # first set all new section to FALSE, then test it and come back to add logic ot change this
-#         doc = row['doc_object']
-#         summ_object = row['summ_object']
-#         section = row['section']
-#         article_name = row['article_name']
-
-#         #check if article is first in new section, which would make us start a new section heading
-        
-#         if row['new_section'] == True:
-#             article_list.append(create_doc(doc, summ_object, section, article_name, new_section = True))
-
-#         else:
-#             article_list.append(create_doc(doc, summ_object, section, article_name, new_section = False))
-
-#     master = article_list[0]
-#     composer = Composer(master)
-#     for document in article_list[1:]:
-#         composer.append(document)
-
-#     composer.save(master_filename) 
-
 # %%
 make_master_file(df, 'here_is_my_big_test.docx')
-# %%
-def make_masters(filepaths_to_docs, filepaths_to_summs):
-    '''
-    this takes in the dictionary of documents and metadata
-
-    it uses the above functions to:
-    
-        - create the summaries for the text in each individual article
-        - formats headings and makes a table of contents for each file
-
-    '''
-
-    make_master_file(doc_dict, summ_filename, summ=True)
-    make_master_file(doc_dict, article_filename, summ=False)
-
-# make_masters(doc_dict, "master_summaries.docx", "master_articles.docx")
-
-# %%
