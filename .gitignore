@@ -10,6 +10,7 @@
 
 # doc and txt files
 articles/*
+articles_backup/*
 
 # demo files
 docbuilder_demo.docx

@@ -8,7 +8,7 @@ import glob
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 from docx.enum.style import WD_STYLE_TYPE
-from docx.shared import Inches, Pt
+from docx.shared import Inches, Pt, RGBColor
 
 from docxcompose.composer import Composer
 
@@ -59,7 +59,6 @@ def make_doc_dataframe(filepaths_to_docs, filepaths_to_summs):
 
     df = pd.DataFrame(columns=cols)
 
-    # zip_dict = dict(zip(filepaths_list, zip(doc_list, summ_list_txt)))
     zipped_paths_dict = dict(zip(filepaths_to_docs, filepaths_to_summs))
 
     for doc_path, txt_path  in zipped_paths_dict.items():
@@ -155,7 +154,6 @@ def create_doc(doc, summ_text, section, article_name, new_section = False):
         # need to set heading and normal styles first, then can edit them later
         doc.styles.add_style('Heading 1', WD_STYLE_TYPE.PARAGRAPH)
         doc.styles.add_style('Heading 2', WD_STYLE_TYPE.PARAGRAPH)
-        # doc.styles.add_style('Normal', WD_STYLE_TYPE.PARAGRAPH)
 
     except:
         print('style already added')
@@ -166,7 +164,7 @@ def create_doc(doc, summ_text, section, article_name, new_section = False):
     font_1 = new_heading_style_1.font
     font_1.name = 'Segoe UI Semibold'
     font_1.size = Pt(12)
-    # self.document.add_paragraph('Header One', style='New Heading')
+    font_1.color.rgb = RGBColor(255, 255, 255)
 
     new_heading_style_2 = doc.styles.add_style('New Heading 2', WD_STYLE_TYPE.PARAGRAPH)
     new_heading_style_2.base_style = doc.styles['Heading 2']
@@ -174,11 +172,19 @@ def create_doc(doc, summ_text, section, article_name, new_section = False):
     font_2.name = 'Segoe UI Semibold'
     font_2.size = Pt(12)
 
+    # it's not letting me change 'normal' style and apply that, so making a new style
     new_normal_style = doc.styles.add_style('New Normal', WD_STYLE_TYPE.PARAGRAPH)
     new_normal_style.base_style = doc.styles['Normal']
     normal_font = new_normal_style.font
     normal_font.name = 'Segoe UI'
     normal_font.size = Pt(11)
+
+    # this is for article: / abstract: title styles
+    new_normal_style_part = doc.styles.add_style('New Normal Part', WD_STYLE_TYPE.PARAGRAPH)
+    new_normal_style_part.base_style = doc.styles['Normal']
+    normal_part_font = new_normal_style_part.font
+    normal_part_font.name = 'Segoe UI Semibold'
+    normal_part_font.size = Pt(11)
 
     paragraphs = doc.paragraphs
 
@@ -186,18 +192,32 @@ def create_doc(doc, summ_text, section, article_name, new_section = False):
         paragraph.style = doc.styles['New Normal']
     
     p = paragraphs[0]
-    # p.style = doc.styles['Normal']
 
     if new_section == True:
         section_paragraph = p.insert_paragraph_before(section)
-        # section_paragraph.style = doc.styles['Heading 1']
         section_paragraph.style = doc.styles['New Heading 1']
+        image_paragraph = p.insert_paragraph_before()
+        r = image_paragraph.add_run()
+        image_paragraph.paragraph_format.left_indent = -Inches(1.2)
+        
+        # adding the correct section heading images
+        if section == 'Content + Training':
+            r.add_picture('section_images/content_training.png')
+
+        elif section == 'Product + Availability':
+            r.add_picture('section_images/product_availability.png')
+
+        elif section == 'Programs + Offers':
+            r.add_picture('section_images/programs_offers.png')
+
+        else:
+            r.add_picture('section_images/partner_update.png')
 
     title = p.insert_paragraph_before(article_name)
     title.style = doc.styles['New Heading 2']
-    abstract_title = p.insert_paragraph_before('Abstract:')
+    abstract_title = p.insert_paragraph_before('Abstract:', style = 'New Normal Part')
     abstract = p.insert_paragraph_before(summ_text, style = 'New Normal')
-    article_title = p.insert_paragraph_before('Article:')
+    article_title = p.insert_paragraph_before('Article:', style = 'New Normal Part')
 
     return doc
 
@@ -213,7 +233,14 @@ def make_master_file(filepaths_to_docs, filepaths_to_summs):
 
     toc = Document()
 
-    paragraph = toc.add_paragraph('TABLE OF CONTENTS')
+    # need to set this for TOC document too
+    new_normal_style_part = toc.styles.add_style('New Normal Part', WD_STYLE_TYPE.PARAGRAPH)
+    new_normal_style_part.base_style = toc.styles['Normal']
+    normal_part_font = new_normal_style_part.font
+    normal_part_font.name = 'Segoe UI Semibold'
+    normal_part_font.size = Pt(11)
+
+    paragraph = toc.add_paragraph('TABLE OF CONTENTS', style = 'New Normal Part')
     toc = make_toc(toc)
     article_list = [toc]
 
@@ -248,26 +275,6 @@ def make_master_file(filepaths_to_docs, filepaths_to_summs):
         new_width, new_height = docsection.page_height, docsection.page_width
         docsection.page_width = new_width
         docsection.page_height = new_height
-
-    # normal_style = doc.styles['Normal']
-    # normal_font = normal_style.font
-    # normal_font.name = 'Segoe UI'
-    # normal_font.size = Pt(11)
-
-    # heading_1_style = final_doc.styles['Heading 1']
-    # heading_1_font = heading_1_style.font
-    # heading_1_font.name = 'Segoe UI Semibold'
-    # heading_1_font.size = Pt(12)
-
-    # heading_2_style = final_doc.styles['Heading 2']
-    # heading_2_font = heading_1_style.font
-    # heading_2_font.name = 'Segoe UI Semibold'
-    # heading_2_font.size = Pt(12)
-
-    # normal_style = final_doc.styles['Normal']
-    # normal_font = heading_1_style.font
-    # normal_font.name = 'Segoe UI'
-    # normal_font.size = Pt(11)
 
     final_doc.save('master_doc.docx')
 
