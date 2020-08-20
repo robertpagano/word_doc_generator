@@ -155,6 +155,7 @@ def create_doc(doc, summ_text, section, article_name, new_section = False):
         # need to set heading and normal styles first, then can edit them later
         doc.styles.add_style('Heading 1', WD_STYLE_TYPE.PARAGRAPH)
         doc.styles.add_style('Heading 2', WD_STYLE_TYPE.PARAGRAPH)
+        # doc.styles.add_style('Normal', WD_STYLE_TYPE.PARAGRAPH)
 
     except:
         print('style already added')
@@ -173,14 +174,19 @@ def create_doc(doc, summ_text, section, article_name, new_section = False):
     font_2.name = 'Segoe UI Semibold'
     font_2.size = Pt(12)
 
+    new_normal_style = doc.styles.add_style('New Normal', WD_STYLE_TYPE.PARAGRAPH)
+    new_normal_style.base_style = doc.styles['Normal']
+    normal_font = new_normal_style.font
+    normal_font.name = 'Segoe UI'
+    normal_font.size = Pt(11)
+
     paragraphs = doc.paragraphs
 
+    for paragraph in paragraphs:
+        paragraph.style = doc.styles['New Normal']
+    
     p = paragraphs[0]
-
-    # normal_style = doc.styles['Normal']
-    # normal_font = heading_1_style.font
-    # normal_font.name = 'Segoe UI'
-    # normal_font.size = Pt(11)
+    # p.style = doc.styles['Normal']
 
     if new_section == True:
         section_paragraph = p.insert_paragraph_before(section)
@@ -188,11 +194,9 @@ def create_doc(doc, summ_text, section, article_name, new_section = False):
         section_paragraph.style = doc.styles['New Heading 1']
 
     title = p.insert_paragraph_before(article_name)
-    # title.style = doc.styles['Heading 2']
-    # title.style = doc.styles['New Heading 2']
     title.style = doc.styles['New Heading 2']
     abstract_title = p.insert_paragraph_before('Abstract:')
-    abstract = p.insert_paragraph_before(summ_text)
+    abstract = p.insert_paragraph_before(summ_text, style = 'New Normal')
     article_title = p.insert_paragraph_before('Article:')
 
     return doc
@@ -244,6 +248,11 @@ def make_master_file(filepaths_to_docs, filepaths_to_summs):
         new_width, new_height = docsection.page_height, docsection.page_width
         docsection.page_width = new_width
         docsection.page_height = new_height
+
+    # normal_style = doc.styles['Normal']
+    # normal_font = normal_style.font
+    # normal_font.name = 'Segoe UI'
+    # normal_font.size = Pt(11)
 
     # heading_1_style = final_doc.styles['Heading 1']
     # heading_1_font = heading_1_style.font
